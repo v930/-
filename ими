@@ -1,3 +1,5 @@
+
+   
 class Leaf:
     
     def __init__(self, value: int, parent = None, left = None, right = None):
@@ -68,9 +70,9 @@ class Tree:
             return 
         else:
             self.new_order(leaf.left, mas)
-            m.append(leaf.value)
+            mas.append(leaf.value)
             self.new_order(leaf.right, mas)
-        return (mas)
+        return mas
         
     
     
@@ -133,23 +135,59 @@ class Tree:
         if leaf.right != None:
             self.print_(leaf.right, tabs+3, dir="R")
     
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-   
+    def minl(self,leaf):
         
-   
-    
+        while leaf.left is not None:
+            leaf = leaf.left
+            
+        return leaf
+  
 
-        
-        
-        
+    def deleteNode(self,leaf, key):
+        if leaf is None:
+            return 
+
+        # ищем число, которое надо удалить
+        if key < leaf.value:
+            leaf.left = self.deleteNode(leaf.left, key)
+        elif key > leaf.value:
+            leaf.right = self.deleteNode(leaf.right, key)
+        else:
+            # если у листочка 1 потомок или их нет
+            if leaf.left is None:
+                temp = leaf.right
+                leaf.value = None
+                return temp
+
+            elif leaf.right is None:
+                temp = leaf.left
+                leaf.value = None
+                return temp
+
+            # если у листочка 2 потомка
+            temp = self.minl(leaf.right)
+
+            leaf.value = temp.value
+            leaf.right = self.deleteNode(leaf.right, temp.value)
+
+        return leaf
     
+    def delete_all(self, leaf, key):
+        
+        m_all = self.new_order(leaf)
+        quantity = 0
+        
+        for i in m_all:
+            if i == key:
+                quantity += 1
+                
+        if quantity == 0:
+             self.deleteNode(leaf, key)
+         
+        for _ in range(quantity):
+            self.deleteNode(leaf, key)
+        self.print_()
+
     
